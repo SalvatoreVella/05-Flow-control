@@ -1,0 +1,104 @@
+@use "color-sizes-module.scss" as csm;
+@use "function-rem-module.scss" as f;
+@use "sass:color";
+
+$f-size: 1rem, 2rem, 3rem;
+
+@mixin card($color, $border-color, $font-size: 1rem) {
+    color: $color;
+    border: f.px-to-rem(csm.$b-size) solid $border-color;
+    font-size: $font-size;
+    margin: f.px-to-rem(8) auto;
+}
+
+%text {
+    width: fit-content;
+    color: csm.$c-tertiary;
+}
+
+div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: fit-content;
+    @include card(csm.$c-primary, csm.$c-primary);
+    h1 {
+        @extend %text;
+        border-bottom: f.px-to-rem(csm.$b-size) solid csm.$c-secondary;
+    }
+    h2 {
+        @extend %text;
+        padding: f.px-to-rem(16);
+        border: csm.$b-size solid csm.$c-primary;
+    }
+    section {
+        display: flex;
+        margin: 0 f.px-to-rem(16px);
+        article {
+            &.first-art,
+            &.third-art {
+                @include card(csm.$c-secondary, csm.$c-tertiary);
+            }
+            &.second-art,
+            &.fourth-art {
+                @include card(csm.$c-primary, csm.$c-tertiary);
+            }
+            &.fifth-art {
+                @include card(csm.$c-tertiary, csm.$c-secondary, f.px-to-rem(24px));
+                margin-bottom: f.px-to-rem(16px);
+            }
+            p {
+                text-align: center;
+                padding: f.px-to-rem(8);
+            }
+        }
+        &:nth-of-type(2) {
+            gap: f.px-to-rem(16px);
+            div {
+                width: f.px-to-rem(45px);
+                height: f.px-to-rem(45px);
+                align-items: flex-start;
+                /* @for $i from 1 through 19 {
+                    &:nth-child(# {$i}) {   //Ho messo gli spazi dopo # perchè sass mi dava errore anche se era un commento
+                        @if $i == 10 {
+                            background-color: csm.$c-secondary;
+                            color: csm.$c-primary
+                            } @else {
+                            background-color: hsl(0, 0%, calc(100% - ($i * 5%)));
+                            color: hsl(0, 0%, calc(0% + ($i * 5%)));
+                        }
+                    }
+                    &.fs-# {$i}rem { // Anche qua #
+                        @if $i < 4 {
+                        font-size: $i + rem;
+                        }
+                    }
+                }  */
+
+                // Inizialmente ho svolto l'esercizio senza guardare alcun indicazione e
+                //ho trovato il modo di applicare i colori corretti senza l'utilizzo del
+                //modulo sass:color visto che nelle lezioni Greg spiegava che questi
+                //moduli possono incidere sulle prestazioni. Ho anche aggiunto il font-size senza usare l'each.
+                // L'ho lasciata perchè non ho il coraggio di eliminarla dopo tutto il tempo che mi è costata XD.
+
+                @for $i from 1 to 20 {
+                    &:nth-child(#{$i}) {
+                        @if $i == 10 {
+                            background-color: csm.$c-secondary;
+                            color: csm.$c-primary
+                        }
+                        @else {
+                            background-color: color.adjust(white, $lightness: - ($i * 5%));
+                            color: color.adjust(black, $lightness: + ($i * 5%));
+                        }
+                    }
+                }
+                @each $v in $f-size {
+                    &.fs-#{$v} {
+                        font-size: $v;
+                    };
+                }
+            }
+        }
+    }
+} 
